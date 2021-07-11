@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="todo.css">
+</head>
+<body>
+    <main>
+        <h1>To Do List</h1>
+        <div class="add-todo-div">
+            <label for="newTodo">Add To Do:</label>
+            <input type="text" name="newTodo" id="newTodo">
+            <button>Add</button>
+        </div>
+        <div class="maindiv">
+            <div class="todo-div">
+                <div class="todo-header">
+                    High Priority
+                </div>
+                <div class="todo-item">
+                    <input type="text" value="Test" readonly>
+                </div>
+                <div class="todo-item">
+                    <input type="text" value="Test1" readonly>
+                </div>
+            </div>
+            <div class="todo-div">
+                <div class="todo-header">
+                    Medium Priority
+                </div>
+                <div class="todo-item">
+                    <input type="text" value="Test2" readonly>
+                </div>
+                <div class="todo-item">
+                    <input type="text" value="Test3" readonly>
+                </div>
+                <div class="todo-item">
+                    <input type="text" value="Test4" readonly>
+                </div>
+            </div>
+            <div class="todo-div">
+                <div class="todo-header">
+                    Low Priority
+                </div>
+                <div class="todo-item">
+                    <input type="text" value="Test5" readonly>
+                </div>
+                <div class="todo-item">
+                    <input type="text" value="Test6" readonly>
+                </div>
+                <div class="todo-item">
+                    <input type="text" value="Test7" readonly>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="todo.js"></script>
+</body>
+</html>
