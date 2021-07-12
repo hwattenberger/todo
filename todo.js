@@ -1,3 +1,7 @@
+const highDiv = document.querySelector('#div-high');
+const mediumDiv = document.querySelector('#div-medium');
+const lowDiv = document.querySelector('#div-low');
+
 const todoArray = [{
     task: "Walk Dog",
     priority: "high"    
@@ -16,7 +20,35 @@ const todoArray = [{
 }];
 
 for (let newTodo of todoArray) {
-    console.log(newTodo.task)
+    createTodo(newTodo);
+}
+
+function createTodo(newTodo) {
+    const newDiv = document.createElement('div');
+    newDiv.classList.add('todo-item');
+    const newInput = document.createElement('input');
+    newInput.type="text";
+    newInput.value=newTodo.task;
+    newInput.readOnly=true;
+    newDiv.appendChild(newInput);
+    let updateDiv=""
+
+    switch(newTodo.priority) {
+        case 'high':
+            updateDiv = highDiv;
+            break;
+        case 'medium':
+            updateDiv = mediumDiv;
+            break;
+        case 'low':
+            updateDiv = lowDiv;
+            break;
+        default:
+            console.log("UH OH");
+    }
+    updateDiv.appendChild(newDiv);
+    todoListeners(newDiv);
+    todoInputListener(newInput);
 }
 
 const todoItems = document.querySelectorAll('.todo-item');
@@ -24,8 +56,15 @@ const todoHeaders = document.querySelectorAll('.todo-header');
 const todoInputs = document.querySelectorAll('.todo-item input');
 
 const addButton = document.querySelector('button');
+const addInput = document.querySelector('#newTodo');
 
-todoItems.forEach(todo => {
+todoItems.forEach(todo => todoListeners(todo));
+
+todoHeaders.forEach(todoHeader => todoHeaderListener(todoHeader));
+
+todoInputs.forEach(todoInput => todoInputListener(todoInput));
+
+function todoListeners(todo) {
     todo.draggable = "true"
     todo.addEventListener('dragstart', onDragStart);
     todo.addEventListener('drop', onDrop);
@@ -33,20 +72,37 @@ todoItems.forEach(todo => {
     todo.addEventListener('dragleave', dragLeave);
     todo.addEventListener('dragover', allowDrop);
     todo.addEventListener('dragend', dragEnd);
-    //todo.addEventListener('dblclick', todoItemDblClick);
-})
+}
 
-todoHeaders.forEach(todoHeader => {
+function todoHeaderListener(todoHeader) {
     todoHeader.addEventListener('drop', onDropHeader);
     todoHeader.addEventListener('dragenter', dragEnter);
     todoHeader.addEventListener('dragleave', dragLeave);
     todoHeader.addEventListener('dragover', allowDrop);
     todoHeader.addEventListener('dragend', dragEnd);
+}
+
+function todoInputListener(todoInput) {
+    todoInput.addEventListener('dblclick', todoItemDblClick);
+}
+
+addButton.addEventListener('click', createNewTodo);
+
+addInput.addEventListener('keyup', e => {
+    if (e.keyCode === 13) {   //enter
+        createNewTodo();
+    }
 })
 
-todoInputs.forEach(todoInput => {
-    todoInput.addEventListener('dblclick', todoItemDblClick);
-})
+function createNewTodo() {
+    const newTodo = {
+        task: addInput.value,
+        priority: "high"
+    }
+    todoArray.push(newTodo)
+    createTodo(newTodo);
+    addInput.value = "";
+}
 
 document.addEventListener('click', e => {
     const editingInput = document.querySelector('.editInput')
