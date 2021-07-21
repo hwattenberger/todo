@@ -15,11 +15,47 @@
     <main>
         <h1>To Do List</h1>
         <div class="add-todo-div">
-                <form action="/" method="POST">
+            <form action="/" method="POST">
                 <label for="newTodo">Add To Do:</label>
                 <input type="text" name="newTodo" id="newTodo">
                 <button>Add</button>
             </form>
+        </div>
+        <div id="todo-item-divs">
+            <% for (let todo of todos) { %> 
+                <div class="todo-item" id="<%=todo._id%>" class="prty-<%=todo.priority%>" draggable="true">
+                    <div class="todo-item-header">
+                        <input type="text" readonly="true" value="<%=todo.task%>" id="<%=todo._id%>-task">
+                        <div>
+                            <% if (todo.status === "Complete") { %> 
+                            <span id="<%=todo._id%>-comp" title="Uncomplete" class="completeSpan"><i class="fas fa-times"></i></span>
+                            <% } else { %> 
+                            <span id="<%=todo._id%>-comp" title="Complete" class="completeSpan"><i class="fas fa-check"></i></span>
+                            <% } %> 
+                        </div>
+                    </div>
+                    <div class="todo-detail notvisible" id="<%=todo._id%>-todo-detail-div" >
+                        <form action="POST">
+                            <div>
+                                <label for="dueDate">Due Date:</label>
+                                <input type="date" name="dueDate" id="<%=todo._id%>-dueDate" class="readonly dueDateInput" readonly>
+                            </div>
+                            <div>
+                                <label for="notes">Notes:</label>
+                                <textarea name="notes" id="<%=todo._id%>-notes" cols="20" rows="5" class="readonly notesInput" readonly><%if(todo.notes)%><%=todo.notes%></textarea>
+                            </div>
+                        </form>
+                            <div class="todo-detail-icons">
+                                <span title="Edit" class="todo-edit" id="<%=todo._id%>-editTodo"><i class="fas fa-pencil-alt"></i></span>
+                                <span title="Save" id="<%=todo._id%>-saveTodo" class="notvisible todo-save"><i class="far fa-save"></span></i>
+                
+                                <form action="/<%=todo._id%>?_method=DELETE" method="POST" id="<%=todo._id%>-formDelete">
+                                <button class="deletebtn"><span title="Delete" id="<%=todo._id%>-deleteTodo"><i class="far fa-trash-alt"></span></i></button>
+                                </form>
+                            </div>
+                    </div>
+                </div>
+            <% } %>
         </div>
         <div class="maindiv">
             <div class="todo-div" id="div-high">
@@ -39,9 +75,16 @@
             </div>
         </div>
         <button id="sortBtn">Sort</button>
+        <div id="completedDivBtn">
+            Show Completed
+            <label class="switch">
+                <input type="checkbox" id="showCompleted" name="showCompleted">
+                <span class="slider"></span>
+            </label>
+        </div>
     </main>
     <div class="todo-detail notvisible" id="todo-detail-div" >
-        <form action="POST">
+        <!-- <form action="POST">
             <div>
                 <label for="dueDate">Due Date:</label>
                 <input type="date" name="dueDate" id="dueDate" class="readonly" readonly>
@@ -52,25 +95,14 @@
             </div>
         </form>
             <div class="todo-detail-icons">
-                <!-- <a href="/" id="editTodo"><span title="Edit"><i class="far fa-save"></span></i></a> -->
                 <span title="Edit" id="editTodo"><i class="fas fa-pencil-alt"></i></span>
                 <a href="/"><span title="Save" id="saveTodo" class="notvisible"><i class="far fa-save"></span></i></a>
 
                 <form action="/?_method=DELETE" method="POST" id="formDelete">
                 <button class="deletebtn"><span title="Delete" id="deleteTodo"><i class="far fa-trash-alt"></span></i></button>
                 </form>
-
-                <!-- <a href="/"><span title="Delete" id="deleteTodo"><i class="far fa-trash-alt"></span></i></a> -->
-                <!-- <a href="/" id="completeTodo"><span title="Complete"><i class="fas fa-check"></span></i></a> -->
-            </div>
-        <!-- <button id="saveTodo">Save</button>
-        <button id="deleteTodo">Delete</button>
-        <button id="completeTodo">Complete</button> -->
+            </div> -->
     </div>
-    <div>
-        <input type="checkbox" id="showCompleted" name="showCompleted">
-        <label for="showCompleted"></label>
-    </div>      
 
     <script>
         const todos = <%-JSON.stringify(todos)%>;

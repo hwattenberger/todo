@@ -13,109 +13,166 @@ const deleteTodoSpan = document.querySelector("#deleteTodo");
 
 const showCompleted = document.querySelector("#showCompleted");
 
+const todoItems = document.querySelectorAll('.todo-item');
+const todoHeaders = document.querySelectorAll('.todo-header');
+const todoInputs = document.querySelectorAll('.todo-item input');
+const todoEdits = document.querySelectorAll('.todo-edit');
+const todoSaves = document.querySelectorAll('.todo-save');
+const todoCompletes = document.querySelectorAll('.completeSpan');
+
+const addButton = document.querySelector('button');
+const addInput = document.querySelector('#newTodo');
+
 fillList();
 
 function fillList() {
     for (let newTodo of todos) {
-        createTodo(newTodo);
+        const newTodoDiv = document.getElementById(newTodo._id);
+
+        let updateDiv = "";
+        switch(newTodo.priority) {
+            case 'high':
+                updateDiv = highDiv;
+                break;
+            case 'medium':
+                updateDiv = mediumDiv;
+                break;
+            case 'low':
+                updateDiv = lowDiv;
+                break;
+            default:
+                updateDiv = lowDiv;
+        }
+
+        updateDiv.appendChild(newTodoDiv);
+
+        //By default hide completed todos
+        if (newTodo.status === "Complete") {
+            newTodoDiv.classList.add('notvisible');
+        }
+
+        const dueDateInput = document.getElementById(`${newTodo._id}-dueDate`);
+        const storedDate = new Date(newTodo.dueDate);
+        
+        const formattedDate = `${storedDate.getUTCFullYear().toString()}-${(storedDate.getUTCMonth() + 1).toString().padStart(2,0)}-${storedDate.getUTCDate().toString().padStart(2,0)}`
+        dueDateInput.value = formattedDate;
     }
 }
 
 
-function createTodo(newTodo) {
-    const todoItem = document.createElement('div');
-    todoItem.classList.add('todo-item');
-    const todoItemHeader = document.createElement('div');
-    todoItemHeader.classList.add('todo-item-header');
-    const newInput = document.createElement('input');
-    newInput.type="text";
-    newInput.value=`${newTodo.task}`; 
-    newInput.readOnly=true;
-    const completeTodo = document.createElement('div');
-    if (newTodo.status === "Complete") {
-        completeTodo.innerHTML = '<span title="Uncomplete" class="completeSpan"><i class="fas fa-times"></span></i>';
-    } else {
-        completeTodo.innerHTML = '<span title="Complete" class="completeSpan"><i class="fas fa-check"></span></i>';
-    }
-    // completeTodo.innerHTML = '<form action="/?_method=DELETE" method="POST" id="formDelete"><button class="deletebtn"><span title="Complete"><i class="fas fa-check"></span></i></button></form>';
-    //completeTodo.href = `/`
+// function fillList() {
+//     for (let newTodo of todos) {
+//         createTodo(newTodo);
+//     }
+// }
 
-    todoItem.appendChild(todoItemHeader);
-    todoItemHeader.appendChild(newInput);
-    todoItemHeader.appendChild(completeTodo);
-    let updateDiv=""
 
-    switch(newTodo.priority) {
-        case 'high':
-            updateDiv = highDiv;
-            break;
-        case 'medium':
-            updateDiv = mediumDiv;
-            break;
-        case 'low':
-            updateDiv = lowDiv;
-            break;
-        default:
-            updateDiv = lowDiv;
-    }
-    todoItem.id = newTodo._id;
+// function createTodoss(newTodo) {
+//     const todoItem = document.createElement('div');
+//     todoItem.classList.add('todo-item');
+//     const todoItemHeader = document.createElement('div');
+//     todoItemHeader.classList.add('todo-item-header');
+//     const newInput = document.createElement('input');
+//     newInput.type="text";
+//     newInput.value=`${newTodo.task}`; 
+//     newInput.readOnly=true;
+//     const completeTodo = document.createElement('div');
+//     if (newTodo.status === "Complete") {
+//         completeTodo.innerHTML = '<span title="Uncomplete" class="completeSpan"><i class="fas fa-times"></span></i>';
+//     } else {
+//         completeTodo.innerHTML = '<span title="Complete" class="completeSpan"><i class="fas fa-check"></span></i>';
+//     }
 
+//     todoItem.appendChild(todoItemHeader);
+//     todoItemHeader.appendChild(newInput);
+//     todoItemHeader.appendChild(completeTodo);
+//     let updateDiv=""
+
+//     switch(newTodo.priority) {
+//         case 'high':
+//             updateDiv = highDiv;
+//             break;
+//         case 'medium':
+//             updateDiv = mediumDiv;
+//             break;
+//         case 'low':
+//             updateDiv = lowDiv;
+//             break;
+//         default:
+//             updateDiv = lowDiv;
+//     }
+//     todoItem.id = newTodo._id;
     
-    // const newDetail = copyDetail.cloneNode(true);
-    // newDetail.id = "";
-    // //newDetail.classList.add('todo-detail');
+//     updateDiv.appendChild(todoItem);
+//     todoListeners(todoItem);
+//     todoInputListener(newInput);
+//     completeTodo.addEventListener('click', markTodo);
+// }
 
-    // newDiv.appendChild(newDetail);
-    
-    updateDiv.appendChild(todoItem);
-    todoListeners(todoItem);
-    todoInputListener(newInput);
-    completeTodo.addEventListener('click', markTodo);
+todoEdits.forEach(editSpan => {
+    editSpan.addEventListener('click', editTodoEvent);
+})
+
+todoSaves.forEach(saveSpan => {
+    saveSpan.addEventListener('click', saveEdits);
+})
+
+todoCompletes.forEach(completeSpan => {
+    completeSpan.addEventListener('click', markTodo);
+})
+
+// editDetails.addEventListener('click', editTodo);
+
+todoHeaders.forEach(todoHeader => todoHeaderListener(todoHeader));
+
+// saveTodoSpan.addEventListener('click', saveEdits);
+
+function editTodoEvent(e) {
+    const editSpan = e.currentTarget;
+    const todoItem = editSpan.closest(".todo-item");
+    editTodo(todoItem);
 }
 
-editDetails.addEventListener('click', editTodo);
+function editTodo(todoItem) {
+    const id = todoItem.id;
+    const dueDateInput = document.getElementById(`${id}-dueDate`);
+    const notesInput = document.getElementById(`${id}-notes`);
+    const taskInput = document.getElementById(`${id}-task`);
+    const saveSpan = document.getElementById(`${id}-saveTodo`);
+    const editSpan = document.getElementById(`${id}-editTodo`);
 
-saveTodoSpan.addEventListener('click', saveEdits);
+    dueDateInput.readOnly = false;
+    notesInput.readOnly = false;
+    taskInput.readOnly = false;
 
-function editTodo(e) {
-    dueDate.readOnly = false;
-    notes.readOnly = false;
+    taskInput.parentElement.classList.add('fieldEditable');
+    dueDateInput.classList.add('fieldEditable');
+    notesInput.classList.add('fieldEditable');
 
-    const toDoItem = e.currentTarget.closest(".todo-item");
-    const inputTask = toDoItem.querySelector(".todo-item-header input");
-
-    inputTask.readOnly = false;
-    inputTask.parentElement.classList.add('fieldEditable');
-
-    dueDate.classList.add("fieldEditable");
-    notes.classList.add("fieldEditable");
-
-    editTodoSpan.classList.add("notvisible");
-    saveTodoSpan.classList.remove("notvisible");
+    saveSpan.classList.remove("notvisible");
+    editSpan.classList.add("notvisible");
 }
 
 function stopEditTodo(todoItem) {
-    dueDate.readOnly = true;
-    notes.readOnly = true;
+    const id = todoItem.id;
+    const dueDateInput = document.getElementById(`${id}-dueDate`);
+    const notesInput = document.getElementById(`${id}-notes`);
+    const taskInput = document.getElementById(`${id}-task`);
+    const saveSpan = document.getElementById(`${id}-saveTodo`);
+    const editSpan = document.getElementById(`${id}-editTodo`);
 
-    const inputTask = todoItem.querySelector(".todo-item-header input");
+    dueDateInput.readOnly = true;
+    notesInput.readOnly = true;
+    taskInput.readOnly = true;
 
-    inputTask.readOnly = true;
-    inputTask.parentElement.classList.remove('fieldEditable');
+    taskInput.parentElement.classList.remove('fieldEditable');
+    dueDateInput.classList.remove('fieldEditable');
+    notesInput.classList.remove('fieldEditable');
 
-    dueDate.classList.remove("fieldEditable");
-    notes.classList.remove("fieldEditable");
-
-    editTodoSpan.classList.remove("notvisible");
-    saveTodoSpan.classList.add("notvisible");
+    saveSpan.classList.add("notvisible");
+    editSpan.classList.remove("notvisible");
 }
 
-const todoItems = document.querySelectorAll('.todo-item');
-const todoHeaders = document.querySelectorAll('.todo-header');
-const todoInputs = document.querySelectorAll('.todo-item input');
-
-const addButton = document.querySelector('button');
-const addInput = document.querySelector('#newTodo');
 
 // Add event listeners to todo div, todo input, and todo header
 todoItems.forEach(todo => todoListeners(todo));
@@ -143,21 +200,28 @@ function todoInputListener(todoInput) {
     todoInput.addEventListener('click', todoItemClick);
 }
 
-function markTodo(completeDiv) {
-    const todoItem = completeDiv.currentTarget.closest(".todo-item")
+function markTodo(e) {
+    const todoItem = e.currentTarget.closest(".todo-item")
     const updateSpan = todoItem.querySelector('.completeSpan')
 
     let putString = "";
     
     if (updateSpan.title === "Complete") {
+        //Marking Complete
         putString=`/edit/${todoItem.id}?status=Complete`;
-        updateSpan.parentElement.innerHTML = '<span title="Uncomplete" class="completeSpan"><i class="fas fa-times"></span></i>';
+        updateSpan.title="Uncomplete"
+        updateSpan.innerHTML = `<i class="fas fa-times"></i>`
+        if (!showCompleted.checked) {
+            todoItem.classList.add('notvisible');
+        }
     }  else {
+        //Marking New
         putString=`/edit/${todoItem.id}?status=New`;
-        updateSpan.parentElement.innerHTML = '<span title="Complete" class="completeSpan"><i class="fas fa-check"></span></i>';
+        updateSpan.title="Complete"
+        updateSpan.innerHTML = `<i class="fas fa-check"></i>`
     }
 
-    console.log("Mark Todo", updateSpan.title)
+    console.log("Mark Todo", putString)
 
     axios.put(putString)
         .then( res => {
@@ -166,40 +230,43 @@ function markTodo(completeDiv) {
             console.log("Error", err)})
 }
 
-function saveEdits(saveDiv) {
-    const todoItem = saveDiv.currentTarget.closest(".todo-item")
+function saveEdits(e) {
+    const todoItem = e.currentTarget.closest(".todo-item")
     const todoTask = todoItem.querySelector(".todo-item-header input")
-    
+
+    const notes = todoItem.querySelector(".notesInput")
+    const dueDate = todoItem.querySelector(".dueDateInput")
+
     const dateDue = new Date(dueDate.value);
-    console.log("here's the date", dateDue);
 
     axios.put(`/edit/${todoItem.id}?dueDate=${dateDue}&notes=${notes.value}&q=${todoTask.value}`)
         .then( res => {
-            console.log("Success", res)})
+            console.log("Success", res)
+            stopEditTodo(todoItem)})
         .catch( err => {
             console.log("Error", err)})
 }
 
 // Add functionality to creating new todos
-addButton.addEventListener('click', createNewTodo);
+// addButton.addEventListener('click', createNewTodo);
 
-addInput.addEventListener('keyup', e => {
-    if (e.keyCode === 13) {   //enter
-        createNewTodo();
-    }
-})
+// addInput.addEventListener('keyup', e => {
+//     if (e.keyCode === 13) {   //enter
+//         createNewTodo();
+//     }
+// })
 
-function createNewTodo() {
-    const newTodo = {
-        task: addInput.value,
-        priority: "high",
-        id: todoArray.length
-    }
-    todoArray.push(newTodo)
-    createTodo(newTodo);
-    addInput.value = "";
-    console.log(todoArray);
-}
+// function createNewTodo() {
+//     const newTodo = {
+//         task: addInput.value,
+//         priority: "high",
+//         id: todoArray.length
+//     }
+//     todoArray.push(newTodo)
+//     createTodo(newTodo);
+//     addInput.value = "";
+//     console.log(todoArray);
+// }
 
 document.addEventListener('click', e => {
     const editingInput = document.querySelector('.editInput');
@@ -210,17 +277,18 @@ document.addEventListener('click', e => {
 
     // This section removes attention from the viewingItem class (on a todo-item div)
     viewingItem.forEach(editItem => {
-        //console.log("here");
+        console.log("here");
         if (!editItem.contains(e.target)){
             // console.log("here");
             stopEditTodo(editItem);
             editItem.classList.remove('viewingItem');
 
-            const todoDetail = document.querySelector('.todo-detail');
+            const todoDetail = editItem.querySelector('.todo-detail');
+            todoDetail.classList.add('notvisible');
 
-            if (!e.target.closest(".todo-item")) {
-                todoDetail.classList.add('notvisible');
-            }
+            // if (!e.target.closest(".todo-item")) {
+            //     todoDetail.classList.add('notvisible');
+            // }
         }
     })
 
@@ -246,7 +314,23 @@ document.addEventListener('click', e => {
 showCompleted.addEventListener('click', toggleCompleted)
 
 function toggleCompleted(e) {
-     
+    const completeSpans = document.querySelectorAll(".completeSpan");
+
+    if(e.target.checked===true) {
+        //Show completed 
+        completeSpans.forEach(completeSpan => {
+           const todoItem = completeSpan.closest(".todo-item");
+            todoItem.classList.remove('notvisible'); 
+        })
+    } else {
+        //Only show non-completed
+        completeSpans.forEach(completeSpan => {
+            if (completeSpan.title !== "Complete") {
+                const todoItem = completeSpan.closest(".todo-item");
+                todoItem.classList.add('notvisible'); 
+            }
+        })
+    }
 }
 
 //Functions to support events
@@ -314,12 +398,21 @@ function dragEnd(e) {
 }
 
 function todoItemDblClick(e) {
-    e.currentTarget.readOnly = false;
-    e.currentTarget.classList.add('editInput')
+    const todoItem = e.target.closest(".todo-item");
+    editTodo(todoItem);
 }
 
 // Clicking a specific todo (shows detail)
 function todoItemClick(e) {
+    const todoItem = e.currentTarget.closest(".todo-item");
+    const todoDetail = todoItem.querySelector(".todo-detail");
+
+    todoDetail.classList.remove("notvisible");
+    todoItem.classList.add('viewingItem');
+}
+
+
+function todoItemClicky(e) {
     const dueDate = document.querySelector('#dueDate');
     const notes = document.querySelector('#notes');
     // const todoDetailDiv = e.currentTarget.parentElement;

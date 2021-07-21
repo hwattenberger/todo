@@ -42,7 +42,8 @@ app.post('/', async (req, res) => {
     const {newTodo} = req.body;
     const todo = new Todo({
         task: newTodo,
-        priority: "high"
+        priority: "high",
+        status: "New"
     });
     await todo.save();
     // console.log(todo);
