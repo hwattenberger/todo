@@ -1,11 +1,9 @@
-const highDiv = document.querySelector('#div-high');
-const mediumDiv = document.querySelector('#div-medium');
-const lowDiv = document.querySelector('#div-low');
-const copyDetail = document.querySelector('#todo-detail-div');
-const editDetails = document.querySelector('#editTodo');
+// const highDiv = document.querySelector('#div-high');
+// const mediumDiv = document.querySelector('#div-medium');
+// const lowDiv = document.querySelector('#div-low');
 
-const dueDate = document.querySelector("#dueDate");
-const notes = document.querySelector("#notes");
+//const dueDate = document.querySelector("#dueDate");
+//const notes = document.querySelector("#notes");
 
 const editTodoSpan = document.querySelector("#editTodo");
 const saveTodoSpan = document.querySelector("#saveTodo");
@@ -22,27 +20,42 @@ const todoCompletes = document.querySelectorAll('.completeSpan');
 
 const addButton = document.querySelector('button');
 const addInput = document.querySelector('#newTodo');
+const themeButton = document.querySelector('#changeTheme');
 
 fillList();
 
 function fillList() {
-    for (let newTodo of todos) {
+    const today = new Date();
+
+    const sortedTodos = [...todos];
+    sortedTodos.sort(sort_date);
+    console.log(sortedTodos);
+
+    for (let newTodo of sortedTodos) {
         const newTodoDiv = document.getElementById(newTodo._id);
 
-        let updateDiv = "";
-        switch(newTodo.priority) {
-            case 'high':
-                updateDiv = highDiv;
-                break;
-            case 'medium':
-                updateDiv = mediumDiv;
-                break;
-            case 'low':
-                updateDiv = lowDiv;
-                break;
-            default:
-                updateDiv = lowDiv;
-        }
+        // let updateDiv = "";
+        // switch(newTodo.priority) {
+        //     case 'high':
+        //         updateDiv = highDiv;
+        //         break;
+        //     case 'medium':
+        //         updateDiv = mediumDiv;
+        //         break;
+        //     case 'low':
+        //         updateDiv = lowDiv;
+        //         break;
+        //     default:
+        //         updateDiv = lowDiv;
+        // }
+
+        const topic = newTodo.topic;
+        let updateDiv=""
+        if ((topic !== undefined) && (topic !== null)) updateDiv = document.getElementById(`div-${topic.name}`)
+        else updateDiv = document.getElementById(`div-unknown`)
+
+        // let updateDiv = document.getElementById(`div-${newTodo.topic.name}`)
+        // if (updateDiv === null) updateDiv = document.getElementById(`div-unknown`)
 
         updateDiv.appendChild(newTodoDiv);
 
@@ -53,61 +66,18 @@ function fillList() {
 
         const dueDateInput = document.getElementById(`${newTodo._id}-dueDate`);
         const storedDate = new Date(newTodo.dueDate);
+        if (storedDate < today) {
+            const newOverdue = document.createElement('div');
+            newOverdue.classList.add('overdueDiv');
+            newOverdue.innerHTML = '<i class="fas fa-exclamation"></i>';
+            const newTodoHeader = newTodoDiv.querySelector('.todo-item-header');
+            newTodoHeader.prepend(newOverdue);
+        }
         
         const formattedDate = `${storedDate.getUTCFullYear().toString()}-${(storedDate.getUTCMonth() + 1).toString().padStart(2,0)}-${storedDate.getUTCDate().toString().padStart(2,0)}`
         dueDateInput.value = formattedDate;
     }
 }
-
-
-// function fillList() {
-//     for (let newTodo of todos) {
-//         createTodo(newTodo);
-//     }
-// }
-
-
-// function createTodoss(newTodo) {
-//     const todoItem = document.createElement('div');
-//     todoItem.classList.add('todo-item');
-//     const todoItemHeader = document.createElement('div');
-//     todoItemHeader.classList.add('todo-item-header');
-//     const newInput = document.createElement('input');
-//     newInput.type="text";
-//     newInput.value=`${newTodo.task}`; 
-//     newInput.readOnly=true;
-//     const completeTodo = document.createElement('div');
-//     if (newTodo.status === "Complete") {
-//         completeTodo.innerHTML = '<span title="Uncomplete" class="completeSpan"><i class="fas fa-times"></span></i>';
-//     } else {
-//         completeTodo.innerHTML = '<span title="Complete" class="completeSpan"><i class="fas fa-check"></span></i>';
-//     }
-
-//     todoItem.appendChild(todoItemHeader);
-//     todoItemHeader.appendChild(newInput);
-//     todoItemHeader.appendChild(completeTodo);
-//     let updateDiv=""
-
-//     switch(newTodo.priority) {
-//         case 'high':
-//             updateDiv = highDiv;
-//             break;
-//         case 'medium':
-//             updateDiv = mediumDiv;
-//             break;
-//         case 'low':
-//             updateDiv = lowDiv;
-//             break;
-//         default:
-//             updateDiv = lowDiv;
-//     }
-//     todoItem.id = newTodo._id;
-    
-//     updateDiv.appendChild(todoItem);
-//     todoListeners(todoItem);
-//     todoInputListener(newInput);
-//     completeTodo.addEventListener('click', markTodo);
-// }
 
 todoEdits.forEach(editSpan => {
     editSpan.addEventListener('click', editTodoEvent);
@@ -121,7 +91,9 @@ todoCompletes.forEach(completeSpan => {
     completeSpan.addEventListener('click', markTodo);
 })
 
-// editDetails.addEventListener('click', editTodo);
+themeButton.addEventListener('click', e => {
+    document.documentElement.setAttribute('data-theme', 'blue');
+})
 
 todoHeaders.forEach(todoHeader => todoHeaderListener(todoHeader));
 
@@ -247,27 +219,6 @@ function saveEdits(e) {
             console.log("Error", err)})
 }
 
-// Add functionality to creating new todos
-// addButton.addEventListener('click', createNewTodo);
-
-// addInput.addEventListener('keyup', e => {
-//     if (e.keyCode === 13) {   //enter
-//         createNewTodo();
-//     }
-// })
-
-// function createNewTodo() {
-//     const newTodo = {
-//         task: addInput.value,
-//         priority: "high",
-//         id: todoArray.length
-//     }
-//     todoArray.push(newTodo)
-//     createTodo(newTodo);
-//     addInput.value = "";
-//     console.log(todoArray);
-// }
-
 document.addEventListener('click', e => {
     const editingInput = document.querySelector('.editInput');
     const viewingItem = document.querySelectorAll('.viewingItem');
@@ -340,22 +291,33 @@ function onDragStart(e) {
     e.dataTransfer.setData('text/html', e.currentTarget.innerHTML);
 }
 
-// function onDrop(e) {
-//     let target = e.target;
-//     if (target.readonly=true) { //This is bad, should find a better way
-//         target = target.parentNode
-//     }
-//     e.preventDefault();
-//     if (dragSrcEl !== target) {
-//         dragSrcEl.parentNode.removeChild(dragSrcEl);
-//         target.insertAdjacentElement('beforeBegin', dragSrcEl);
-//     }
-//     target.classList.remove('drop');
-//     todoArray[target.id].priority = "high";
-//     console.log(todoArray);
-// }
-
 function onDropHeader(e) {
+    e.preventDefault();
+    dragSrcEl.parentNode.removeChild(dragSrcEl);
+    e.target.parentNode.appendChild(dragSrcEl);
+    e.target.classList.remove('drop');
+
+    const dropTargetParentId = e.target.parentNode.id;
+    let topic=dropTargetParentId.slice(4);
+
+    // console.log(dropTargetParentId.slice(4));
+    // if (dropTargetParentId === "div-high") priority = "high";
+    // else if (dropTargetParentId === "div-medium") priority = "medium";
+    // else priority = "low";
+
+    //const newTitle = editingInput.value;
+    //const todoDiv = editingInput.parentElement;
+    //console.log("Here", e.target)
+
+    axios.put(`/edit/${dragSrcEl.id}?topic=${topic}`)
+    .then( res => {
+        console.log("Success", res)})
+    .catch( err => {
+        console.log("Error", err)})
+
+}
+
+function onDropHeaderPriority(e) {
     e.preventDefault();
     dragSrcEl.parentNode.removeChild(dragSrcEl);
     e.target.parentNode.appendChild(dragSrcEl);
@@ -411,42 +373,6 @@ function todoItemClick(e) {
     todoItem.classList.add('viewingItem');
 }
 
-
-function todoItemClicky(e) {
-    const dueDate = document.querySelector('#dueDate');
-    const notes = document.querySelector('#notes');
-    // const todoDetailDiv = e.currentTarget.parentElement;
-    const todoDetailDiv = e.currentTarget.closest(".todo-item");
-
-    // const deleteTodo = document.querySelector('#deleteTodo');
-
-    todoDetailDiv.appendChild(copyDetail);
-    const editDivId = todoDetailDiv.id;
-    
-    copyDetail.classList.remove('notvisible');
-    todoDetailDiv.classList.add('viewingItem');
-    console.log("DIV HERE", todoDetailDiv);
-
-    axios.get(`/${editDivId}`)
-    .then( res => {
-        const storedDate = new Date(res.data.dueDate);
-        const formattedDate = `${storedDate.getFullYear().toString()}-${(storedDate.getMonth() + 1).toString().padStart(2,0)}-${storedDate.getDate().toString().padStart(2,0)}`
-        dueDate.value = formattedDate,
-        notes.value = res.data.notes
-
-        const saveTodo = document.querySelector('#saveTodo');
-        const deleteTodoForm = document.querySelector('#formDelete');
-        const completeTodo = document.querySelector('#completeTodo');
-
-        saveTodo.href = `/${editDivId}/save`;
-        deleteTodoForm.action = `/${editDivId}?_method=DELETE`
-        console.log("delete todo", deleteTodoForm);
-        // completeTodo.href = `/edit/${editDivId}`;
-    })
-    .catch( err => {
-        console.log("Error", err)})
-
-}
 
 //Sorting
 

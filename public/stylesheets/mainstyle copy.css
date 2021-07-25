@@ -4,37 +4,6 @@
     --todo-bg-color: #a2d2ff;
     --todo-item-color: #ffc8dd;
     --edit-color: #cdb4db;
-    --background: rgb(107, 115, 214);
-    --bg-gradient: linear-gradient(90deg, rgba(107, 115, 214, 1) 0%, rgba(200, 171, 217, 1) 58%);
-    --glassBackground: rgba(255, 255, 255, .25);
-    --glassBackground-shd: 5px 5px 10px rgba(255, 255, 255, 0.1);
-    --glassBackground-blur: blur(20px);
-    --header-text: #000000;
-}
-
-[data-theme="blue"] {
-    --main-bg-color: #f1faee;
-    --main-header-color: #457b9d;
-    --todo-bg-color: #a8dadc;
-    --todo-item-color: #f1faee;
-    --edit-color: #457b9d;
-    --background: inherit;
-    --bg-gradient: inherit;
-    --header-text: #000000;
-}
-
-[data-theme="blackAndWhite"] {
-    --main-bg-color: #e9ecef;
-    --main-header-color: #343a40;
-    --todo-bg-color: #ced4da;
-    --todo-item-color: #f8f9fa;
-    --edit-color: #adb5bd;
-    --background: inherit;
-    --bg-gradient: inherit;
-    --glassBackground: rgba(255, 255, 255, .25);
-    --glassBackground-shd: 5px 5px 10px rgba(255, 255, 255, 0.1);
-    --glassBackground-blur: blur(20px);
-    --header-text: #e9ecef;
 }
 
 body {
@@ -42,30 +11,10 @@ body {
     margin: 0;
     padding: 0;
     background-color: var(--main-bg-color);
-    background: var(--background);
-    background: var(--bg-gradient);
-    /* background: url("https://images.unsplash.com/photo-1624702660603-e32557833778?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=613&q=80");
-    background-repeat: no-repeat;
-    background-size: cover; */
 }
 
 main {
-    margin: 20px;
-    background-color: var(--glassBackground);
-    backdrop-filter: var(--glassBackground-blur);
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: var(--glassBackground-shd);
-}
-
-.fa-check,
-.fa-times {
-    color: rgba(0, 0, 0, .5);
-}
-
-.fa-check:hover,
-.fa-times:hover {
-    color: rgba(0, 0, 0, .95);
+    /* margin: auto 10rem; */
 }
 
 .fa-cog {
@@ -98,17 +47,6 @@ h1 {
 .add-todo-div button {
     background-color: var(--todo-bg-color);
     font-size: 1.25rem;
-    border: 1px solid black;
-    cursor: pointer;
-    box-shadow: 5px 5px 10px rgba(255, 255, 255, 0.2);
-}
-
-.add-todo-div button:hover {
-    color: purple;
-    transform: translate(0, -1px);
-    transition: transform 3s;
-    transition: color 3s;
-    box-shadow: 5px 5px 10px rgba(255, 255, 255, 0.3);
 }
 
 .add-todo-div input {
@@ -120,20 +58,15 @@ h1 {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    /* margin: 0px 20px;
-    align-items: center;
-    background-color: rgba(255, 255, 255, .15);
-    backdrop-filter: blur(20px);
-    border-radius: 10px; */
+    /* align-items: center; */
 }
 
 .todo-div {
-    background-color: var(--todo-bg-color);
+    background-color: #bde0fe;
     min-height: 50px;
     margin: 1rem;
     width: 300px;
     min-width: 250px;
-    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
 }
 
 .todo-header {
@@ -141,15 +74,13 @@ h1 {
     padding: .4rem .9rem;
     font-weight: 600;
     font-size: 1.25em;
-    color: var(--header-text);
 }
 
 .todo-item {
     margin: .5rem;
     box-sizing: border-box;
     background-color: var(--todo-item-color);
-    border-radius: 5px;
-    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.05);
+
 }
 
 .drop {
@@ -225,7 +156,6 @@ h1 {
 .todo-detail-icons span:hover {
     background-color: var(--main-header-color);
     cursor: pointer;
-    transition: background-color 2s;
 }
 
 .readonly {
@@ -277,19 +207,12 @@ h1 {
     background-color: var(--edit-color);
 }
 
-#completedDivBtn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .switch {
     position: relative;
     display: inline-block;
     width: 40px;
     height: 24px;
     /* text-align: center; */
-    margin: 5px;
 }
 
 .switch input {

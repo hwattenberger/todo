@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Application - Setup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/f7dffca4d8.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/stylesheets/mainstyle.css">
+</head>
+<body>
+    <main>
+        <h1>Setup</h1>
+        <div class="maindiv">
+            <div>
+                <% if (topics.length>0) { %> 
+                Current Topics:
+                <% for (let topic of topics) { %>
+                    <div class="topic-card">
+                        <p><%=topic.name%><p>
+                        <div class="remove-topic">
+                            <form action="/topics/<%= topic._id %>?_method=DELETE" method="POST">
+                            <button>Delete</button></form>
+                        </div>
+                    </div>
+                <% }} %> 
+                <form action="/topics" method="POST">
+                    <label for="topics">Create New Topic: </label>
+                    <input type="text" id="topics" name="topics" required>
+                    <button>New</button>
+                </form>
+            </div>
+        </div>
+        <a href="/">Back to List</a>
+    </main>
+</body>
+</html>

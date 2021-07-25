@@ -7,7 +7,10 @@ const TodoSchema = new Schema({
     dueDate: Date,
     status: String,
     notes: String,
-    topic: String
+    topic: {
+        type: Schema.Types.ObjectId,
+        ref: 'Topic'
+    }
 })
 
 module.exports = mongoose.model('Todo', TodoSchema);
