@@ -9,7 +9,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/f7dffca4d8.js" crossorigin="anonymous"></script>
+    <link href='/stylesheets/fullcalendar.css' rel='stylesheet' />
+    <script src='/javascripts/fullcalendar.js'></script>
     <link rel="stylesheet" href="/stylesheets/mainstyle.css">
+    <!-- <script src="https://uicdn.toast.com/tui.code-snippet/v1.5.2/tui-code-snippet.min.js"></script>
+    <script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
+    <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
+    <script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css" /> -->
 </head>
 <body>
     <main>
@@ -89,7 +96,7 @@
                 </div>
             </div>
         </div>
-        <button id="sortBtn">Sort</button>
+        <!-- <button id="sortBtn">Sort</button> -->
         <div id="completedDivBtn">
             Show Completed
             <label class="switch">
@@ -119,6 +126,8 @@
             </div> -->
     </div>
     <button id="changeTheme">Change Theme</button>
+    <!-- <div id="calendar" style="height: 800px;"></div> -->
+    <div id='calendar'></div>
 
     <script>
         const todos = <%-JSON.stringify(todos)%>;

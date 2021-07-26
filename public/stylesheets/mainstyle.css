@@ -361,6 +361,99 @@ input:checked+.slider:before {
 
 }
 
+.calendarMain {
+    display: flex;
+}
+
+#calendar {
+    width: 100%;
+    max-width: 1100px;
+}
+
+.spanDetail {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    background-color: white;
+    z-index: 100;
+    /* border-color: black transparent transparent transparent; */
+}
+
+.spanDetail h4 {
+    margin: 0;
+    padding: 0;
+}
+
+.landingMain {
+    display: flex;
+}
+
+.landingMain img {
+    max-height: 400px;
+}
+
+.landingMain h1 {
+    text-align: left;
+    font-size: 70px;
+    margin-bottom: 0;
+}
+
+.landingLeft {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    text-align: left;
+    justify-content: center;
+    margin-left: 200px;
+}
+
+.landingLeft button {
+    /* margin: 1rem; */
+    padding: .75rem;
+    width: 100px;
+    margin-bottom: 30px;
+    background-color: var(--main-header-color);
+    cursor: pointer;
+    -webkit-appearance: button;
+    border: 0px solid transparent;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.landingLeft button:hover {
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.registerDiv {
+    margin: 10px auto;
+    width: 400px;
+    /* background-color: blue; */
+}
+
+.registerDiv div {
+    margin: 10px;
+    font-size: 20px;
+}
+
+.registerDiv input {
+    width: 100%;
+    font-size: 20px;
+}
+
+.registerDiv button {
+    font-size: 20px;
+    margin: 10px;
+}
+
+/* .fc-event-title {
+    z-index: 1;
+} */
+
 .remove-topic {
     /* align-content: flex-end; */
 }

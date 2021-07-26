@@ -22,6 +22,10 @@ const addButton = document.querySelector('button');
 const addInput = document.querySelector('#newTodo');
 const themeButton = document.querySelector('#changeTheme');
 
+// var cal = new tui.Calendar('#calendar', {
+//     defaultView: 'month' // monthly view option
+//   });
+
 fillList();
 
 function fillList() {
@@ -376,14 +380,14 @@ function todoItemClick(e) {
 
 //Sorting
 
-const sortButton = document.querySelector('#sortBtn');
+// const sortButton = document.querySelector('#sortBtn');
 
-sortButton.addEventListener('click', e => {
+// sortButton.addEventListener('click', e => {
     
-    todoArray.sort(sort_alpha);
-    clearHeaders();
-    fillList();
-})
+//     todoArray.sort(sort_alpha);
+//     clearHeaders();
+//     fillList();
+// })
 
 //The more recent, the farther up in order
 function sort_date(a, b) {
