@@ -12,26 +12,30 @@
     <link href='/stylesheets/fullcalendar.css' rel='stylesheet' />
     <script src='/javascripts/fullcalendar.js'></script>
     <link rel="stylesheet" href="/stylesheets/mainstyle.css">
+    <link rel="stylesheet" href="/stylesheets/navbar.css">
 </head>
 <body>
+    <%- include('./partials/navbar') %>
     <main>
-        <h1>Calendar View</h1>
+        <h1><%= user.username %>'s Calendar View <a href='/todoList/<%=user._id%>/cal'><i class="far fa-calendar"></i></a>
+            <a href='/todoList/<%=user._id%>'><i class="fas fa-clipboard-list"></i></a></h1>
         <div class="calendarMain">
             <div id='datelessTasks'>
-                <% for (let todo of todos) { %> 
+                <% for (let todo of user.todos) {  %>
+                    <% if(todo.status !== "Complete") { %>  
                     <div class="todo-item" id="<%=todo._id%>" class="prty-<%=todo.priority%>" draggable="true">
                         <div class="todo-item-header">
                             <input type="text" readonly="true" value="<%=todo.task%>" id="<%=todo._id%>-task">
                         </div>
                     </div>
-                <% } %> 
+                <% }} %> 
             </div>
             <div id='calendar'></div>
         </div>
     </main>
 
     <script>
-        const todos = <%-JSON.stringify(todos)%>;
+        const user = <%-JSON.stringify(user)%>;
     </script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 

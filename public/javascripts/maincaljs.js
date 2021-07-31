@@ -44,9 +44,8 @@ calendar.render();
 initialTodoSetup();
 
 function initialTodoSetup() {
-    console.log("Todos", todos)
-    for (let newTodo of todos) {
-        if (newTodo.dueDate) {
+    for (let newTodo of user.todos) {
+        if (newTodo.dueDate && newTodo.status !== "Complete") {
             const newEvent = {
                 id: newTodo._id,
                 title: newTodo.task,
@@ -90,7 +89,7 @@ function dropEvent(info) {
     info.draggedEl.parentNode.removeChild(info.draggedEl);
     // console.log(info);
 
-    axios.put(`/edit/${info.draggedEl.id}?dueDate=${info.date}`)
+    axios.put(`/todoList/${user._id}/todo/${info.draggedEl.id}?dueDate=${info.date}`)
     .then( res => {
         console.log("Success", res)})
     .catch( err => {
@@ -101,9 +100,12 @@ function changeDate(info) {
     // console.log("Changing date", info)
     // console.log("Start", info.event._instance.range.start)
 
-    axios.put(`/edit/${info.event._def.publicId}?dueDate=${info.event._instance.range.start}`)
+    axios.put(`/todoList/${user._id}/todo/${info.event._def.publicId}?dueDate=${info.event._instance.range.start}`)
     .then( res => {
         console.log("Success", res)})
     .catch( err => {
         console.log("Error", err)})
 }
+
+const style = user.defaultView
+document.documentElement.setAttribute('data-theme', style);

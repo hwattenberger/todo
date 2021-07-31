@@ -14,10 +14,6 @@ const TodoSchema = new Schema({
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    },
-    ownedBy: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
     }
 })
 

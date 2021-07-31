@@ -1,4 +1,5 @@
-:root {
+:root,
+[data-theme="glass"] {
     --main-bg-color: #cdb4db;
     --main-header-color: #ffafcc;
     --todo-bg-color: #a2d2ff;
@@ -339,12 +340,34 @@ input:checked+.slider:before {
     transform: translateX(16px);
 }
 
+.maindivSetup {
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* flex-wrap: wrap; */
+    margin: 10px auto;
+    max-width: 400px;
+}
+
+.setupStyle {
+    margin-top: 20px;
+    /* background-color: purple; */
+}
+
+.setupStyle select {
+    width: 100%;
+}
+
 .topic-card {
     background-color: var(--todo-item-color);
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     /* justify-content: flex-start; */
     margin: 5px;
     height: 2rem;
+    padding: 5px 10px;
 }
 
 .topic-card form {
@@ -355,19 +378,25 @@ input:checked+.slider:before {
 
 .topic-card button {
     background: none;
-    padding: 0;
+    padding: 5px;
     /* border: none; */
     cursor: pointer;
+    border: 1px solid black;
+}
 
+.topic-card button:hover {
+    background-color: var(--main-header-color);
 }
 
 .calendarMain {
     display: flex;
+    justify-content: center;
 }
 
 #calendar {
     width: 100%;
     max-width: 1100px;
+    /* text-align: center; */
 }
 
 .spanDetail {
@@ -449,6 +478,27 @@ input:checked+.slider:before {
     font-size: 20px;
     margin: 10px;
 }
+
+.showLists {
+    width: 300px;
+}
+
+.showLists span {
+    padding: 5px;
+}
+
+.showLists .topic-card:hover {
+    background-color: var(--main-header-color);
+}
+
+.viewLinks {
+    font-size: 20px;
+}
+
+.viewLinks a {
+    padding: 5px;
+}
+
 
 /* .fc-event-title {
     z-index: 1;

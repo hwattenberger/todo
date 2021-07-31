@@ -1,0 +1,25 @@
+<nav>
+    <div class="logo">
+        <a href="/">Todo List</a>
+    </div>
+    <div class="nav-ham">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <div class="div-main-buttons">
+        <% if(currentUser) { %> 
+            <span><a href="/todoList/<%=currentUser._id%>">My Todos</a></span>
+            <span><a href="/todoList">All Lists</a></span>
+            <span><a href="/setup">Setup</a></span>
+        <% } %> 
+    </div>
+    <div class="login">
+        <% if(!currentUser) { %> 
+        <span><a href="/login">Login</a></span>
+        <% } else { %> 
+        <span><a href="/logout">Logout</a></span>
+        <% } %> 
+    </div>
+    <script src="/javascripts/navbar.js"></script>
+</nav>

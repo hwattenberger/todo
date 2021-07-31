@@ -20,11 +20,16 @@ const todoCompletes = document.querySelectorAll('.completeSpan');
 
 const addButton = document.querySelector('button');
 const addInput = document.querySelector('#newTodo');
-const themeButton = document.querySelector('#changeTheme');
 
 // var cal = new tui.Calendar('#calendar', {
 //     defaultView: 'month' // monthly view option
 //   });
+setupStyles();
+
+function setupStyles() {
+    const style = user.defaultView
+    document.documentElement.setAttribute('data-theme', style);
+}
 
 fillList();
 
@@ -33,7 +38,6 @@ function fillList() {
 
     const sortedTodos = [...todos];
     sortedTodos.sort(sort_date);
-    console.log(sortedTodos);
 
     for (let newTodo of sortedTodos) {
         const newTodoDiv = document.getElementById(newTodo._id);
@@ -93,10 +97,6 @@ todoSaves.forEach(saveSpan => {
 
 todoCompletes.forEach(completeSpan => {
     completeSpan.addEventListener('click', markTodo);
-})
-
-themeButton.addEventListener('click', e => {
-    document.documentElement.setAttribute('data-theme', 'blue');
 })
 
 todoHeaders.forEach(todoHeader => todoHeaderListener(todoHeader));
@@ -184,7 +184,7 @@ function markTodo(e) {
     
     if (updateSpan.title === "Complete") {
         //Marking Complete
-        putString=`/edit/${todoItem.id}?status=Complete`;
+        putString=`/todoList/${user._id}/todo/${todoItem.id}?status=Complete`;
         updateSpan.title="Uncomplete"
         updateSpan.innerHTML = `<i class="fas fa-times"></i>`
         if (!showCompleted.checked) {
@@ -192,7 +192,7 @@ function markTodo(e) {
         }
     }  else {
         //Marking New
-        putString=`/edit/${todoItem.id}?status=New`;
+        putString=`/todoList/${user._id}/todo/${todoItem.id}?status=New`;
         updateSpan.title="Complete"
         updateSpan.innerHTML = `<i class="fas fa-check"></i>`
     }
@@ -215,7 +215,7 @@ function saveEdits(e) {
 
     const dateDue = new Date(dueDate.value);
 
-    axios.put(`/edit/${todoItem.id}?dueDate=${dateDue}&notes=${notes.value}&q=${todoTask.value}`)
+    axios.put(`/todoList/${user._id}/todo/${todoItem.id}?dueDate=${dateDue}&notes=${notes.value}&q=${todoTask.value}`)
         .then( res => {
             console.log("Success", res)
             stopEditTodo(todoItem)})
@@ -257,7 +257,7 @@ document.addEventListener('click', e => {
             task: newTitle,
             priority: "high"
         }
-        axios.put(`/edit/${todoDiv.id}?q=${newTitle}`)
+        axios.put(`/todoList/${user._id}/todo/${todoDiv.id}?q=${newTitle}`)
         .then( res => {
             console.log("Success", res)})
         .catch( err => {
@@ -313,7 +313,7 @@ function onDropHeader(e) {
     //const todoDiv = editingInput.parentElement;
     //console.log("Here", e.target)
 
-    axios.put(`/edit/${dragSrcEl.id}?topic=${topic}`)
+    axios.put(`/todoList/${user._id}/todo/${dragSrcEl.id}?topic=${topic}`)
     .then( res => {
         console.log("Success", res)})
     .catch( err => {
@@ -338,7 +338,7 @@ function onDropHeaderPriority(e) {
     //const todoDiv = editingInput.parentElement;
     //console.log("Here", e.target)
 
-    axios.put(`/edit/${dragSrcEl.id}?priority=${priority}`)
+    axios.put(`/todoList/${user._id}/todo/${dragSrcEl.id}?priority=${priority}`)
     .then( res => {
         console.log("Success", res)})
     .catch( err => {
