@@ -1,0 +1,9 @@
+<% if(success && success.length) { %> 
+    <div class="flash" role="alert">
+        <i class="fas fa-check"></i><%= success %> 
+    </div>
+<% } if(error && error.length)  { %> 
+    <div class="flash" role="error">
+        <i class="fas fa-times"></i><%= error %> 
+    </div>
+<% } %> 

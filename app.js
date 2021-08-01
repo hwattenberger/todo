@@ -108,7 +108,7 @@ app.get('/register', (req, res) => {
     res.render('register');
 })
 
-app.post('/register', async (req, res) => {
+app.post('/register', catchAsync(async (req, res) => {
     try {
     const {email, username, password} = req.body;
     const user = new User({email, username})
@@ -124,22 +124,24 @@ app.post('/register', async (req, res) => {
         // req.flash('error', e.message);
         res.redirect('register');
     }
-})
+}))
 
 app.get('/login', (req, res) => {
     res.render('login');
 })
 
 app.post('/login', passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'}), (req, res) => {
+    req.flash('success', "Logged In");
     res.redirect('/');
 })
 
 app.get('/logout', (req, res) => {
     req.logout();
+    req.flash('success', "Logged Out");
     res.redirect('/');
 })
 
-app.put('/setup', async (req, res) => {
+app.put('/setup', catchAsync(async (req, res) => {
     // const theme = req.query.theme;
     // const toggled = req.query.toggled;
     const {theme, public} = req.query;
@@ -151,9 +153,9 @@ app.put('/setup', async (req, res) => {
     }
     const user = await User.findByIdAndUpdate(req.user._id, userUpdate, {omitUndefined:true});
 
-    console.log("Test", user)
+    // console.log("Test", user)
     res.send("Success");
-})
+}))
 
 ////
 
@@ -186,7 +188,7 @@ app.get('/todoList/:id', catchAsync(async (req, res, next) => {
     
     const topics = await Topic.find({user: id})
 
-    console.log("HERE?", user);
+    // console.log("HERE?", user);
     // console.log("Topics", topics)
     //
     res.render('main', {user, topics});
@@ -210,12 +212,13 @@ app.post('/todoList/:id', catchAsync(async (req, res) => {
 
     await todo.save();
     await user.save();
-    console.log("Created", user);
+    // console.log("Created", user);
+    
     res.redirect(`/todoList/${id}`);
 }))
 
 //Calandar view for a todo list
-app.get('/todoList/:id/cal', async (req, res) => {
+app.get('/todoList/:id/cal', catchAsync(async (req, res) => {
     const {id} = req.params;
     const user = await User.findById(id).populate({
         path:'todos',
@@ -228,17 +231,17 @@ app.get('/todoList/:id/cal', async (req, res) => {
     // const todos = await Todo.find({status: 'New'}).populate('topic');
 
     res.render('calendar', {user})
-})
+}))
 
 //Get info about single todo
-app.get('/todo/:todoId', async (req, res) => {
+app.get('/todo/:todoId', catchAsync(async (req, res) => {
     const {todoId} = req.params;
     const todo = await Todo.findById(todoId);
 
-    console.log("Found todo", todoId)
+    // console.log("Found todo", todoId)
 
     res.send(todo);
-})
+}))
 
 //Delete a todo item
 app.delete('/todoList/:id/item/:todoId', catchAsync(async (req, res) => {
@@ -247,14 +250,14 @@ app.delete('/todoList/:id/item/:todoId', catchAsync(async (req, res) => {
     const todo = await Todo.findByIdAndRemove(todoId);
     const user2 = await User.findByIdAndUpdate(id, {$pull: {todos: todoId}})
 
-    console.log("user", user2)
+    // console.log("user", user2)
 
     res.redirect('/');
 }))
 
 //Edit a todo item
 app.put('/todoList/:id/todo/:todoId', catchAsync(async (req, res) => {
-    console.log("HERE2");
+    // console.log("HERE2");
     const {todoId, id} = req.params;
 
     // console.log(req.query);
@@ -272,7 +275,7 @@ app.put('/todoList/:id/todo/:todoId', catchAsync(async (req, res) => {
     if (newTopic === null) topicId = null;
     else topicId=newTopic._id
 
-    console.log("Topic name:", topicId)
+    // console.log("Topic name:", topicId)
 
     const updTodo = {
         task: req.query.q,
@@ -282,9 +285,9 @@ app.put('/todoList/:id/todo/:todoId', catchAsync(async (req, res) => {
         dueDate: dueDate,
         topic: topicId
     }
-    console.log("HERE4", updTodo)
+    // console.log("HERE4", updTodo)
     const todo = await Todo.findByIdAndUpdate(todoId, updTodo, {omitUndefined:true});
-    console.log("HERE5", todo)
+    // console.log("HERE5", todo)
     res.send("Success");
 }))
 
@@ -319,8 +322,9 @@ app.all('*', (req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-    const {statusCode = 500, message = "Something went wrong"} = err;
-    res.status(statusCode).send(message);
+    const {statusCode = 500} = err;
+    if(!err.message) err.message="Oh No, Something Went Wrong."
+    res.status(statusCode).render('error', {err});
 })
 
 const port = process.env.PORT || 3000;

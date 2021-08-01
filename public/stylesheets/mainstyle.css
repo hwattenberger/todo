@@ -499,6 +499,22 @@ input:checked+.slider:before {
     padding: 5px;
 }
 
+.flash {
+    background-color: var(--todo-item-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* justify-content: flex-start; */
+    margin: 5px;
+    height: 2rem;
+    padding: 5px 10px;
+    text-align: center;
+}
+
+.flash i {
+    margin: 5px;
+}
+
 
 /* .fc-event-title {
     z-index: 1;
