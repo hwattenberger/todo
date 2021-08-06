@@ -39,7 +39,7 @@
                                 <span title="Edit" class="todo-edit" id="<%=todo._id%>-editTodo"><i class="fas fa-pencil-alt"></i></span>
                                 <span title="Save" id="<%=todo._id%>-saveTodo" class="notvisible todo-save"><i class="far fa-save"></span></i>
                 
-                                <form action="/todoList/<%=user._id%>/item/<%=todo._id%>?_method=DELETE" method="POST" id="<%=todo._id%>-formDelete">
+                                <form action="/todoList/<%=user._id%>/todo/<%=todo._id%>?_method=DELETE" method="POST" id="<%=todo._id%>-formDelete">
                                 <button class="deletebtn"><span title="Delete" id="<%=todo._id%>-deleteTodo"><i class="far fa-trash-alt"></span></i></button>
                                 </form>
                             </div>
@@ -47,23 +47,6 @@
                 </div>
             <% } %>
         </div>
-        <!-- <div class="maindiv">
-            <div class="todo-div" id="div-high">
-                <div class="todo-header">
-                    High Priority
-                </div>
-            </div>
-            <div class="todo-div" id="div-medium">
-                <div class="todo-header">
-                    Medium Priority
-                </div>
-            </div>
-            <div class="todo-div" id="div-low">
-                <div class="todo-header">
-                    Low Priority
-                </div>
-            </div>
-        </div> -->
         <div class="maindiv">
             <% for (let topic of topics) { %> 
             <div class="todo-div" id="div-<%=topic.name%>">
@@ -78,7 +61,6 @@
                 </div>
             </div>
         </div>
-        <!-- <button id="sortBtn">Sort</button> -->
         <div id="completedDivBtn">
             Show Completed
             <label class="switch">

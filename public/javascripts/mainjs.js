@@ -21,9 +21,7 @@ const todoCompletes = document.querySelectorAll('.completeSpan');
 const addButton = document.querySelector('button');
 const addInput = document.querySelector('#newTodo');
 
-// var cal = new tui.Calendar('#calendar', {
-//     defaultView: 'month' // monthly view option
-//   });
+
 setupStyles();
 
 function setupStyles() {
