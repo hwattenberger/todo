@@ -93,4 +93,8 @@ nav {
     .login {
         display: none
     }
+
+    .active {
+        display: flex;
+    }
 }

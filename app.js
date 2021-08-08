@@ -10,19 +10,14 @@ const flash = require('connect-flash');
 const mongoose = require('mongoose');
 const path = require('path');
 
-// const Topic = require('./models/topic');
-// const Todo = require('./models/todo');
-
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 
 const methodOverride = require('method-override');
-const catchAsync = require('./utils/catchAsync');
+// const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const MongoDBStore = require('connect-mongo');
-
-// const {isLoggedIn} = require('./middleware');
 
 const userRoutes = require('./routes/users')
 const todoListRoutes = require('./routes/todolists')

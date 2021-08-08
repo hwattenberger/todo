@@ -94,6 +94,9 @@ h1 {
     text-align: center;
     margin-bottom: 1rem;
     font-size: 1.25rem;
+    width: 400px;
+    justify-content: center;
+    margin: auto;
 }
 
 .add-todo-div button {
@@ -102,18 +105,28 @@ h1 {
     border: 1px solid black;
     cursor: pointer;
     box-shadow: 5px 5px 10px rgba(255, 255, 255, 0.2);
+    margin: 5px;
 }
 
 .add-todo-div button:hover {
-    color: purple;
+    /* color: purple; */
     transform: translate(0, -1px);
     transition: transform 3s;
     transition: color 3s;
     box-shadow: 5px 5px 10px rgba(255, 255, 255, 0.3);
 }
 
-.add-todo-div input {
+.add-todo-div input,
+.add-todo-div textarea,
+.add-todo-div select {
     font-size: 1.25rem;
+    margin: 5px;
+    width: 100%;
+}
+
+.add-todo-div div {
+    text-align: left;
+    /* justify-content: flex-start; */
 }
 
 .maindiv {
@@ -513,6 +526,13 @@ input:checked+.slider:before {
 
 .flash i {
     margin: 5px;
+    position: absolute;
+    top: 22px;
+    right: 25px;
+}
+
+.flash.notvisible {
+    display: none;
 }
 
 

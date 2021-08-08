@@ -41,3 +41,11 @@ module.exports.editTodo = async (req, res) => {
 
     res.send("Success");
 }
+
+module.exports.getTodo = async (req, res) => {
+    const {todoId, id} = req.params;
+
+    const todo = await Todo.findById(todoId)
+
+    res.send(todo);
+}

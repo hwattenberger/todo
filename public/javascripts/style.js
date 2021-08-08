@@ -1,8 +1,6 @@
 const styleSelection = document.querySelector('select')
 const showCompleted = document.querySelector("#showCompleted");
 
-setupStyles();
-
 styleSelection.addEventListener('change', (e) => {
     console.log(styleSelection.value);
     document.documentElement.setAttribute('data-theme', styleSelection.value);
@@ -27,8 +25,3 @@ showCompleted.addEventListener('click', (e) => {
         .catch( err => {
             console.log("Error", err)})
 })
-
-function setupStyles() {
-    const style = user.defaultView
-    document.documentElement.setAttribute('data-theme', style);
-}

@@ -26,16 +26,24 @@ module.exports.usersTodoList = async (req, res, next) => {
 }
 
 module.exports.createTodoItem = async (req, res) => {
-    const {newTodo} = req.body;
+    const {newTodo, notes} = req.body;
+    let {dueDate, topic} = req.body;
     const {id} = req.params;
+
+    if (dueDate === "") dueDate = undefined;
+
+    if (topic === "unknown") topic = undefined;
+    // console.log(req.body);
 
     const user = await User.findById(id)
 
     const todo = new Todo({
         task: newTodo,
-        priority: "high",
         status: "New",
-        createdBy: req.user._id
+        createdBy: req.user._id,
+        dueDate,
+        notes,
+        topic
     });
 
     user.todos.push(todo);

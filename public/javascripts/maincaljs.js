@@ -64,7 +64,7 @@ function hoverAdd(info) {
     // console.log("Hovering", info);
     const newDiv = document.createElement('div');
 
-    axios.get(`/todo/${info.event._def.publicId}`)
+    axios.get(`/todoList/${user._id}/todo/${info.event._def.publicId}`)
     .then( res => {
         console.log("Success", res)
         newDiv.innerHTML = `<h4>Title:</h4>${res.data.task}<h4>Notes:</h4>${res.data.notes}`;
@@ -85,6 +85,17 @@ function hoverRemove(info) {
 }
 
 function dropEvent(info) {
+    axios.get(`/todoList/${user._id}/todo/checkOwner/${info.draggedEl.id}`)
+    .then( res => {
+        console.log("Success2", res);
+    })
+    .catch( err => {
+        console.log("Error2", err);
+        if (err.response.status === 302) {
+            window.location.href = window.location.href; 
+        }
+        throw "Error";
+    })
     // console.log("hi", info)
     info.draggedEl.parentNode.removeChild(info.draggedEl);
     // console.log(info);
@@ -97,8 +108,17 @@ function dropEvent(info) {
 }
 
 function changeDate(info) {
-    // console.log("Changing date", info)
-    // console.log("Start", info.event._instance.range.start)
+    axios.get(`/todoList/${user._id}/todo/checkOwner/${info.event._def.publicId}`)
+    .then( res => {
+        console.log("Success", res);
+    })
+    .catch( err => {
+        console.log("Error", err);
+        if (err.response.status === 302) {
+            window.location.href = window.location.href; 
+        }
+        throw "Error";
+    })
 
     axios.put(`/todoList/${user._id}/todo/${info.event._def.publicId}?dueDate=${info.event._instance.range.start}`)
     .then( res => {
@@ -106,6 +126,3 @@ function changeDate(info) {
     .catch( err => {
         console.log("Error", err)})
 }
-
-const style = user.defaultView
-document.documentElement.setAttribute('data-theme', style);

@@ -1,10 +1,3 @@
-// const highDiv = document.querySelector('#div-high');
-// const mediumDiv = document.querySelector('#div-medium');
-// const lowDiv = document.querySelector('#div-low');
-
-//const dueDate = document.querySelector("#dueDate");
-//const notes = document.querySelector("#notes");
-
 const editTodoSpan = document.querySelector("#editTodo");
 const saveTodoSpan = document.querySelector("#saveTodo");
 const deleteTodoSpan = document.querySelector("#deleteTodo");
@@ -20,14 +13,9 @@ const todoCompletes = document.querySelectorAll('.completeSpan');
 
 const addButton = document.querySelector('button');
 const addInput = document.querySelector('#newTodo');
-
-
-setupStyles();
-
-function setupStyles() {
-    const style = user.defaultView
-    document.documentElement.setAttribute('data-theme', style);
-}
+const newTodoAddFields = document.querySelector('#newTodoAddFields');
+const addTodoDiv = document.querySelector('.add-todo-div');
+const btnCloseNewTodo = document.querySelector('#btnCloseNewTodo');
 
 fillList();
 
@@ -36,6 +24,8 @@ function fillList() {
 
     const sortedTodos = [...todos];
     sortedTodos.sort(sort_date);
+
+    console.log("Sorted", sortedTodos)
 
     for (let newTodo of sortedTodos) {
         const newTodoDiv = document.getElementById(newTodo._id);
@@ -99,6 +89,14 @@ todoCompletes.forEach(completeSpan => {
 
 todoHeaders.forEach(todoHeader => todoHeaderListener(todoHeader));
 
+addInput.addEventListener('click', (e) => {
+    newTodoAddFields.classList.remove('notvisible');
+})
+
+btnCloseNewTodo.addEventListener('click', (e) => {
+    newTodoAddFields.classList.add('notvisible');
+})
+
 // saveTodoSpan.addEventListener('click', saveEdits);
 
 function editTodoEvent(e) {
@@ -108,7 +106,20 @@ function editTodoEvent(e) {
 }
 
 function editTodo(todoItem) {
+
     const id = todoItem.id;
+    axios.get(`/todoList/${user._id}/todo/checkOwner/${id}`)
+    .then( res => {
+        console.log("Success", res);
+    })
+    .catch( err => {
+        console.log("Error", err);
+        if (err.response.status === 302) {
+            window.location.href = window.location.href; 
+        }
+        throw "Error";
+    })
+
     const dueDateInput = document.getElementById(`${id}-dueDate`);
     const notesInput = document.getElementById(`${id}-notes`);
     const taskInput = document.getElementById(`${id}-task`);
@@ -143,8 +154,10 @@ function stopEditTodo(todoItem) {
     dueDateInput.classList.remove('fieldEditable');
     notesInput.classList.remove('fieldEditable');
 
-    saveSpan.classList.add("notvisible");
-    editSpan.classList.remove("notvisible");
+    if(saveSpan) {
+        saveSpan.classList.add("notvisible");
+        editSpan.classList.remove("notvisible");
+    }
 }
 
 
@@ -195,12 +208,15 @@ function markTodo(e) {
         updateSpan.innerHTML = `<i class="fas fa-check"></i>`
     }
 
-    console.log("Mark Todo", putString)
+    // console.log("Mark Todo", putString)
 
     axios.put(putString)
         .then( res => {
             console.log("Success", res)})
         .catch( err => {
+            if (err.response.status === 302) {
+                window.location.href = window.location.href; 
+            }
             console.log("Error", err)})
 }
 
@@ -215,12 +231,18 @@ function saveEdits(e) {
 
     axios.put(`/todoList/${user._id}/todo/${todoItem.id}?dueDate=${dateDue}&notes=${notes.value}&q=${todoTask.value}`)
         .then( res => {
-            console.log("Success", res)
-            stopEditTodo(todoItem)})
+            console.log("Success", res);
+            stopEditTodo(todoItem);
+        })
         .catch( err => {
-            console.log("Error", err)})
+            console.log("Error", err)
+            if (err.response.status === 302) {
+                window.location.href = window.location.href; 
+            }
+        })
 }
 
+//Restore defaults
 document.addEventListener('click', e => {
     const editingInput = document.querySelector('.editInput');
     const viewingItem = document.querySelectorAll('.viewingItem');
@@ -259,8 +281,15 @@ document.addEventListener('click', e => {
         .then( res => {
             console.log("Success", res)})
         .catch( err => {
+            if (err.response.status === 302) {
+                window.location.href = window.location.href; 
+            }
             console.log("Error", err)})
     }
+
+    // if (!addTodoDiv.contains(e.target)) {
+    //     newTodoAddFields.classList.add('notvisible');
+    // }
 })
 
 //
@@ -290,59 +319,74 @@ function toggleCompleted(e) {
 function onDragStart(e) {
     this.style.opacity = '.4';
     dragSrcEl = e.currentTarget;
-    e.dataTransfer.setData('text/html', e.currentTarget.innerHTML);
+    // e.dataTransfer.setData('text/html', e.currentTarget.innerHTML);
 }
 
 function onDropHeader(e) {
     e.preventDefault();
+
+    const dragId = dragSrcEl.id;
+    const dragDate = document.getElementById(`${dragId}-dueDate`);
+    const dragDateValue = dragDate.value;
+
     dragSrcEl.parentNode.removeChild(dragSrcEl);
-    e.target.parentNode.appendChild(dragSrcEl);
+    if (dragDateValue === "") {
+        e.target.parentNode.appendChild(dragSrcEl);
+    }
+    else {
+        const todoItems = e.target.parentNode.querySelectorAll(".todo-item");
+        let dropped = "";
+        for (let i=0; i<todoItems.length; i++) {
+            const todoItem = todoItems[i];
+            const todoItemDate = document.getElementById(`${todoItem.id}-dueDate`);
+            const todoItemDateValue = todoItemDate.value;
+            // console.log("Hi", dragDateValue, "!", todoItemDateValue)
+            if (dragDateValue < todoItemDateValue || !todoItemDateValue) {
+                e.target.parentNode.insertBefore(dragSrcEl, todoItem);
+                dropped=1;
+                break;
+            }
+        }
+        if (!dropped) e.target.parentNode.appendChild(dragSrcEl);
+
+    }
+
     e.target.classList.remove('drop');
 
     const dropTargetParentId = e.target.parentNode.id;
     let topic=dropTargetParentId.slice(4);
 
-    // console.log(dropTargetParentId.slice(4));
-    // if (dropTargetParentId === "div-high") priority = "high";
-    // else if (dropTargetParentId === "div-medium") priority = "medium";
-    // else priority = "low";
-
-    //const newTitle = editingInput.value;
-    //const todoDiv = editingInput.parentElement;
-    //console.log("Here", e.target)
-
     axios.put(`/todoList/${user._id}/todo/${dragSrcEl.id}?topic=${topic}`)
     .then( res => {
-        console.log("Success", res)})
+    })
     .catch( err => {
-        console.log("Error", err)})
-
+        if (err.response.status === 302) { // || err.response.status === 404) {
+            window.location.href = `${window.location.href}?error=ERR` ; 
+        }
+        console.dir(err.response)
+        console.log("Error2", err)})
 }
 
-function onDropHeaderPriority(e) {
-    e.preventDefault();
-    dragSrcEl.parentNode.removeChild(dragSrcEl);
-    e.target.parentNode.appendChild(dragSrcEl);
-    e.target.classList.remove('drop');
+// function onDropHeaderPriority(e) {
+//     e.preventDefault();
+//     dragSrcEl.parentNode.removeChild(dragSrcEl);
+//     e.target.parentNode.appendChild(dragSrcEl);
+//     e.target.classList.remove('drop');
 
-    const dropTargetParentId = e.target.parentNode.id;
-    let priority="";
+//     const dropTargetParentId = e.target.parentNode.id;
+//     let priority="";
 
-    if (dropTargetParentId === "div-high") priority = "high";
-    else if (dropTargetParentId === "div-medium") priority = "medium";
-    else priority = "low";
+//     if (dropTargetParentId === "div-high") priority = "high";
+//     else if (dropTargetParentId === "div-medium") priority = "medium";
+//     else priority = "low";
 
-    //const newTitle = editingInput.value;
-    //const todoDiv = editingInput.parentElement;
-    //console.log("Here", e.target)
+//     axios.put(`/todoList/${user._id}/todo/${dragSrcEl.id}?priority=${priority}`)
+//     .then( res => {
+//         console.log("Success", res)})
+//     .catch( err => {
+//         console.log("Error", err)})
 
-    axios.put(`/todoList/${user._id}/todo/${dragSrcEl.id}?priority=${priority}`)
-    .then( res => {
-        console.log("Success", res)})
-    .catch( err => {
-        console.log("Error", err)})
-
-}
+// }
 
 
 function dragEnter(e) {
@@ -375,21 +419,11 @@ function todoItemClick(e) {
     todoItem.classList.add('viewingItem');
 }
 
-
-//Sorting
-
-// const sortButton = document.querySelector('#sortBtn');
-
-// sortButton.addEventListener('click', e => {
-    
-//     todoArray.sort(sort_alpha);
-//     clearHeaders();
-//     fillList();
-// })
-
 //The more recent, the farther up in order
 function sort_date(a, b) {
-    if(a.dueDate < b.dueDate) return -1;
+    if(a.dueDate === undefined) return 1; //Put undefined at the end
+    else if(b.dueDate === undefined) return -1; //Put undefined at the end
+    else if(a.dueDate < b.dueDate) return -1;
     else if (a.dueDate > b.dueDate) return 1;
     else return 0;
 }
